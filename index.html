@@ -100,6 +100,12 @@
     animation: fadeUp 0.8s ease forwards 0.8s;
   }
 
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .btn-primary {
     background: var(--amber);
     color: var(--dark);
@@ -137,15 +143,14 @@
   }
 
   .scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  opacity: 0;
-  animation: fadeUp 0.8s ease forwards 1.2s;
-}
+    position: relative;
+    left: auto;
+    width: 1px;
+    height: 60px;
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fadeUpHint 0.8s ease forwards 1.2s;
+  }
 
   .scroll-hint span {
     display: block;
@@ -560,6 +565,11 @@
   .nav-links a:hover { color: var(--amber); }
 
   /* ── ANIMATIONS ── */
+@keyframes fadeUpHint {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -571,6 +581,8 @@
     51% { transform: scaleY(1); transform-origin: bottom; }
     100% { transform: scaleY(0); transform-origin: bottom; }
   }
+
+  
 
   /* ── BOOKING FORM ── */
   .book-step-label {
@@ -729,11 +741,13 @@
   <h1>PUB<span>CRAWL</span></h1>
   <p class="hero-sub">The city's best pub crawl — four stops, an evening to remember</p>
   <p class="hero-sub">Every friday from May 2026</p>
-  <div class="hero-cta">
-    <a href="#biljett" class="btn-primary">Buy ticket</a>
-    <a href="#rutten" class="btn-ghost">See the route</a>
+  <div class="hero-actions">
+    <div class="hero-cta">
+      <a href="#biljett" class="btn-primary">Buy ticket</a>
+      <a href="#rutten" class="btn-ghost">See the route</a>
+    </div>
+    <div class="scroll-hint"><span></span></div>
   </div>
-  <div class="scroll-hint"><span></span></div>
 </section>
 
 <!-- FULL WIDTH PHOTO -->
