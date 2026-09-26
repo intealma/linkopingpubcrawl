@@ -290,16 +290,33 @@
     position: relative;
   }
 
-  .route-section::before {
-    content: 'ROUTE';
+  .route-squiggles {
     position: absolute;
-    top: 2rem;
-    right: 2rem;
-    font-family: 'Mellos', serif;
-    font-size: 8rem;
-    color: rgba(248,244,236,0.04);
-    line-height: 1;
+    top: 0;
+    width: clamp(0px, calc((100vw - 1100px) / 2 - 10px), 300px);
+    height: 100%;
     pointer-events: none;
+    overflow: visible;
+    z-index: 0;
+  }
+  .route-squiggles.left { left: 0; }
+  .route-squiggles.right { right: 0; transform: scaleX(-1); }
+  .route-squiggles path {
+    fill: none;
+    stroke: #B89450;
+    stroke-width: 9px;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .route-squiggles g { animation: squiggle-drift 14s ease-in-out infinite alternate; }
+  @keyframes squiggle-drift {
+    from { transform: translate(-10px, -20px); }
+    to   { transform: translate(14px, 24px); }
+  }
+  .route-section > :not(.route-squiggles) { position: relative; z-index: 1; }
+  @media (max-width: 1260px) { .route-squiggles { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .route-squiggles g { animation: none; }
   }
 
   .section-label {
@@ -318,6 +335,64 @@
     text-align: center;
     color: var(--cream);
     margin-bottom: 4rem;
+  }
+
+  .routes-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .route-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .route-name {
+    font-family: 'Mellos', serif;
+    font-size: 1.8rem;
+    color: var(--cream);
+  }
+
+  .route-badge {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    margin-top: 0.4rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--page-bg);
+    background: var(--gold);
+    padding: 0.3rem 0.8rem;
+  }
+
+  .route-col .stops { max-width: 100%; }
+  .route-col .stops::before { left: 1.5rem; }
+
+  .route-col .stop {
+    grid-template-columns: 3rem 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2.2rem;
+  }
+
+  .route-col .stop-num {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.2rem;
+  }
+
+  .route-col .stop-name { font-size: 1.5rem; }
+  .route-col .stop-desc { font-size: 0.85rem; }
+
+  @media (max-width: 800px) {
+    .routes-grid { grid-template-columns: 1fr; gap: 4.5rem; }
   }
 
   .stops {
@@ -403,6 +478,86 @@
     color: var(--gold);
   }
 
+  /* ── GUIDES ── */
+  .guides-section {
+    padding: 6rem 2rem;
+    background: var(--page-bg);
+    text-align: center;
+  }
+
+  .guides-grid {
+    max-width: 1000px;
+    margin: 3rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 2.5rem;
+    text-align: left;
+  }
+
+  .guide-card-photo-wrap {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.3);
+  }
+
+  .guide-card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .guide-card-photo.zoom-in {
+    transform: scale(1.25);
+    transform-origin: center 65%;
+  }
+
+  .guide-card-photo.zoom-in-more {
+    transform: scale(1.4);
+    transform-origin: center 55%;
+  }
+
+  .guide-card-name {
+    font-family: 'Mellos', serif;
+    font-size: 1.3rem;
+    color: var(--cream);
+    margin-top: 1.1rem;
+  }
+
+  .guide-card-role {
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    color: rgba(248,244,236,0.55);
+    margin-top: 0.2rem;
+  }
+
+  .guide-card-contact {
+    margin-top: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .guide-card-contact a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(248,244,236,0.75);
+    text-decoration: none;
+  }
+
+  .guide-card-contact a:hover { color: var(--gold); }
+
+  .guide-card-contact svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    stroke: var(--gold);
+  }
+
   /* ── TICKET ── */
   .ticket-section {
     padding: 8rem 2rem;
@@ -419,13 +574,25 @@
     pointer-events: none;
   }
 
-  .ticket {
-    max-width: 600px;
+  .tickets {
+    max-width: 1000px;
     margin: 3rem auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+    position: relative;
+  }
+
+  .ticket {
     border: 1px solid rgba(248,244,236,0.3);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
+
+  .ticket-top .route-badge { top: 1.25rem; left: auto; right: 1.25rem; transform: none; margin-top: 0; }
 
   .ticket::before {
     content: '';
@@ -436,7 +603,7 @@
   }
 
   .ticket-top {
-    padding: 2.5rem 3rem;
+    padding: 2.5rem 2.5rem 2rem;
     border-bottom: 1px dashed rgba(248,244,236,0.2);
   }
 
@@ -456,11 +623,15 @@
   }
 
   .ticket-bottom {
-    padding: 2rem 3rem;
+    padding: 2rem 2.5rem 2.5rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    gap: 1.75rem;
+    flex: 1;
   }
+
+  .ticket-bottom .btn-primary { margin-top: auto; }
 
   .ticket-price {
     font-family: 'Mellos', serif;
@@ -670,6 +841,30 @@
 
   .qty-btn:hover { background: rgba(248,244,236,0.1); }
 
+  .form-error {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--gold);
+    border-left: 3px solid var(--gold);
+    padding-left: 0.75rem;
+    display: none;
+  }
+  .form-error.show { display: block; }
+  input.input-invalid { border-color: var(--gold) !important; }
+
+  #input-name::placeholder,
+  #input-phone::placeholder {
+    color: rgba(248,244,236,0.6);
+    opacity: 1;
+  }
+
+  .route-pick {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
   /* ── GALLERY ── */
   .gallery-section {
     padding: 6rem 2rem;
@@ -677,77 +872,30 @@
     text-align: center;
   }
 
-  .slideshow {
-    max-width: 900px;
+  .gallery-grid {
+    max-width: 1100px;
     margin: 3rem auto 0;
-    position: relative;
-    aspect-ratio: 16/9;
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
     background: var(--stone);
   }
 
-  .slideshow-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-
-  .slideshow-img.active {
-    opacity: 1;
-  }
-
-  .slide-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    background: rgba(248,244,236,0.85);
-    border: 1px solid rgba(248,244,236,0.4);
-    color: var(--amber);
-    font-size: 1.5rem;
-    width: 3rem;
-    height: 3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-
-  .slide-btn:hover { background: rgba(247,191,130,0.9); }
-  .slide-btn.prev { left: 1rem; }
-  .slide-btn.next { right: 1rem; }
-
-  .slide-dots {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
-    background: rgba(248,244,236,0.25);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-  }
-
-  .dot.active {
-    background: var(--gold);
-    transform: scale(1.3);
+  @media (max-width: 640px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
   }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
     .about { grid-template-columns: 1fr; gap: 3rem; }
-    .ticket-bottom { flex-direction: column; gap: 1.5rem; text-align: center; }
-    .ticket-includes { text-align: center; }
+    .tickets { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -769,7 +917,7 @@
   <div class="hero-buttons">
     <a href="#rutten" class="pill-btn">See routes</a>
     <a href="#biljett" class="pill-btn">Buy ticket</a>
-    <a href="#omoss" class="pill-btn">About us</a>
+    <a href="#guides" class="pill-btn">About us</a>
   </div>
 </section>
 
@@ -797,7 +945,7 @@
     </div>
     <div class="stat">
       <div class="stat-number">from 249</div>
-      <div class="stat-label">SEK + 50 kr entry</div>
+      <div class="stat-label">SEK per person</div>
     </div>
     <div class="stat">
       <div class="stat-number">20+</div>
@@ -808,48 +956,206 @@
 
 <!-- ROUTE -->
 <section class="route-section" id="rutten">
+  <svg class="route-squiggles left" viewBox="0 70 300 900" preserveAspectRatio="none" aria-hidden="true">
+    <g>
+      <path d="M -40 120 C 80 60, 240 140, 170 260 S 10 380, 90 470 S 270 560, 200 680 S 30 800, 110 940">
+        <animate attributeName="d" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+          values="M -40 120 C 80 60, 240 140, 170 260 S 10 380, 90 470 S 270 560, 200 680 S 30 800, 110 940;
+                  M -40 150 C 110 90, 260 180, 190 300 S 40 400, 120 510 S 240 590, 170 710 S 10 820, 80 940;
+                  M -40 120 C 80 60, 240 140, 170 260 S 10 380, 90 470 S 270 560, 200 680 S 30 800, 110 940"/>
+      </path>
+      <path d="M -60 560 C 60 510, 140 600, 90 680 S -30 760, 40 820 S 160 880, 120 960">
+        <animate attributeName="d" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+          values="M -60 560 C 60 510, 140 600, 90 680 S -30 760, 40 820 S 160 880, 120 960;
+                  M -60 530 C 90 490, 160 590, 70 660 S -50 780, 30 840 S 180 870, 150 960;
+                  M -60 560 C 60 510, 140 600, 90 680 S -30 760, 40 820 S 160 880, 120 960"/>
+      </path>
+    </g>
+  </svg>
+  <svg class="route-squiggles right" viewBox="0 70 300 900" preserveAspectRatio="none" aria-hidden="true">
+    <g>
+      <path d="M -40 120 C 80 60, 240 140, 170 260 S 10 380, 90 470 S 270 560, 200 680 S 30 800, 110 940">
+        <animate attributeName="d" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+          values="M -40 120 C 80 60, 240 140, 170 260 S 10 380, 90 470 S 270 560, 200 680 S 30 800, 110 940;
+                  M -40 150 C 110 90, 260 180, 190 300 S 40 400, 120 510 S 240 590, 170 710 S 10 820, 80 940;
+                  M -40 120 C 80 60, 240 140, 170 260 S 10 380, 90 470 S 270 560, 200 680 S 30 800, 110 940"/>
+      </path>
+      <path d="M -60 560 C 60 510, 140 600, 90 680 S -30 760, 40 820 S 160 880, 120 960">
+        <animate attributeName="d" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+          values="M -60 560 C 60 510, 140 600, 90 680 S -30 760, 40 820 S 160 880, 120 960;
+                  M -60 530 C 90 490, 160 590, 70 660 S -50 780, 30 840 S 180 870, 150 960;
+                  M -60 560 C 60 510, 140 600, 90 680 S -30 760, 40 820 S 160 880, 120 960"/>
+      </path>
+    </g>
+  </svg>
   <p class="section-label">Evening's programs</p>
   <h2 class="section-title">The crawls</h2>
 
-  <div class="stops">
-    <div class="stop">
-      <div class="stop-num">1</div>
-      <div class="stop-body">
-        <p class="stop-time">20:00 — Start</p>
-        <h3 class="stop-name">Horse and Hound</h3>
-        <p class="stop-desc">Wood-paneled gastropub in the heart of Linköping that blends a cozy British atmosphere with an impressive selection of craft beers.</p>
-        <span class="stop-tag">Storgatan 39</span>
+  <div class="routes-grid">
+    <div class="route-col">
+      <div class="route-header">
+        <h3 class="route-name">Stångån</h3>
+      </div>
+      <div class="stops">
+        <div class="stop">
+          <div class="stop-num">1</div>
+          <div class="stop-body">
+            <p class="stop-time">20:00 — Start</p>
+            <h3 class="stop-name">Horse and Hound</h3>
+            <p class="stop-desc">Wood-paneled gastropub in the heart of Linköping that blends a cozy British atmosphere with an impressive selection of craft beers.</p>
+            <span class="stop-tag">Storgatan 39</span>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-num">2</div>
+          <div class="stop-body">
+            <p class="stop-time">21:00</p>
+            <h3 class="stop-name">Ölstugan Tullen</h3>
+            <p class="stop-desc">Classic Swedish beer pub with a wide selection of craft beers. Homely feel in wood and old stucco — just like a pub crawl should have.</p>
+            <span class="stop-tag">Klostergatan 19</span>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-num">3</div>
+          <div class="stop-body">
+            <p class="stop-time">22:00</p>
+            <h3 class="stop-name">Ågatan Bar</h3>
+            <p class="stop-desc">The city's most relaxed bar. Perfect third stop to recharge before the final station.</p>
+            <span class="stop-tag">Ågatan 38</span>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-num">4</div>
+          <div class="stop-body">
+            <p class="stop-time">23:00 — Finale</p>
+            <h3 class="stop-name">O'Learys</h3>
+            <p class="stop-desc">Linköping's entertainment center at 3500 m². Nightclub with DJ, dance floor, bowling and schlager party — entry is NOT included in your ticket since the venue ticket is tied to a personal QR code and cannot be prepaid by us.</p>
+            <span class="stop-tag">Stora Torget 5</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="stop">
-      <div class="stop-num">2</div>
-      <div class="stop-body">
-        <p class="stop-time">21:00</p>
-        <h3 class="stop-name">Ölstugan Tullen</h3>
-        <p class="stop-desc">Classic Swedish beer pub with a wide selection of craft beers. Homely feel in wood and old stucco — just like a pub crawl should have.</p>
-        <span class="stop-tag">Klostergatan 19</span>
+    <div class="route-col">
+      <div class="route-header">
+        <h3 class="route-name">Gyllene</h3>
+        <span class="route-badge">Exclusive</span>
+      </div>
+      <div class="stops">
+        <div class="stop">
+          <div class="stop-num">1</div>
+          <div class="stop-body">
+            <p class="stop-time">20:00 — Start</p>
+            <h3 class="stop-name">GRAND</h3>
+            <p class="stop-desc">Elegant brasserie in the heart of the city, with its own nightclub Létage and the rooftop bar Cherry's upstairs.</p>
+            <span class="stop-tag">Platensgatan 4</span>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-num">2</div>
+          <div class="stop-body">
+            <p class="stop-time">21:00</p>
+            <h3 class="stop-name">Kusinen</h3>
+            <p class="stop-desc">A playful, polished cocktail bar tucked away in the city center — expertly mixed drinks in a cozy setting.</p>
+            <span class="stop-tag">Nygatan 29</span>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-num">3</div>
+          <div class="stop-body">
+            <p class="stop-time">22:00</p>
+            <h3 class="stop-name">Bon Bon</h3>
+            <p class="stop-desc">French-inspired brasserie right on Stora Torget — a stylish stop with a refined atmosphere.</p>
+            <span class="stop-tag">Stora Torget 9</span>
+          </div>
+        </div>
+
+        <div class="stop">
+          <div class="stop-num">4</div>
+          <div class="stop-body">
+            <p class="stop-time">23:00 — Finale</p>
+            <h3 class="stop-name">Ölstugan Tullen</h3>
+            <p class="stop-desc">Classic Swedish beer pub with a wide selection of craft beers. Homely feel in wood and old stucco — just like a pub crawl should have.</p>
+            <span class="stop-tag">Klostergatan 19
+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDES -->
+<section class="guides-section" id="guides">
+  <p class="section-label">About us</p>
+  <h2 class="section-title">Your guides</h2>
+
+  <div class="guides-grid">
+    
+
+    <div class="guide-card">
+      <div class="guide-card-photo-wrap">
+        <img class="guide-card-photo" src="Guides/Embl.JPG" alt="Wilma Berg">
+      </div>
+      <p class="guide-card-name">Wilma Berg</p>
+      <p class="guide-card-role">Guide</p>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-card-photo-wrap">
+        <img class="guide-card-photo zoom-in" src="Guides/AlmaFounderv1.JPG" alt="Alma Mateo Johansson">
+      </div>
+      <p class="guide-card-name">Alma Mateo Johansson</p>
+      <p class="guide-card-role">Founder & Guide</p>
+      <div class="guide-card-contact">
+        <a href="mailto:alma.mj03@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          alma.mj03@gmail.com
+        </a>
+        <a href="tel:+46761404616">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          +46 76 140 46 16
+        </a>
       </div>
     </div>
 
-    <div class="stop">
-      <div class="stop-num">3</div>
-      <div class="stop-body">
-        <p class="stop-time">22:00</p>
-        <h3 class="stop-name">Ågatan Bar</h3>
-        <p class="stop-desc">The city's most relaxed bar. Perfect third stop to recharge before the final station.</p>
-        <span class="stop-tag">Ågatan 38</span>
+    <div class="guide-card">
+      <div class="guide-card-photo-wrap">
+        <img class="guide-card-photo" src="Guides/Lovi.JPG" alt="Lovisa Bogeklint">
       </div>
+      <p class="guide-card-name">Lovisa Bogeklint</p>
+      <p class="guide-card-role">Guide</p>
     </div>
 
-    <div class="stop">
-      <div class="stop-num">4</div>
-      <div class="stop-body">
-        <p class="stop-time">23:00 — Finale</p>
-        <h3 class="stop-name">O'Learys</h3>
-        <p class="stop-desc">Linköping's entertainment center at 3500 m². Nightclub with DJ, dance floor, bowling and schlager party — entry is NOT included in your ticket since the venue ticket is tied to a personal QR code and cannot be prepaid by us.</p>
-        <span class="stop-tag">Stora Torget 5</span>
+    <div class="guide-card">
+      <div class="guide-card-photo-wrap">
+        <img class="guide-card-photo zoom-in-more" src="Guides/Tss2.jpeg" alt="Tess Larsson">
       </div>
+      <p class="guide-card-name">Tess Larsson</p>
+      <p class="guide-card-role">Guide</p>
+    </div>
+
+    
+
+    <div class="guide-card">
+      <div class="guide-card-photo-wrap">
+        <img class="guide-card-photo" src="Guides/Eln.JPG" alt="Elin Roos">
+      </div>
+      <p class="guide-card-name">Elin Roos</p>
+      <p class="guide-card-role">Guide</p>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-card-photo-wrap">
+        <img class="guide-card-photo" src="Guides/Maj.jpg" alt="Freja Lindberg">
+      </div>
+      <p class="guide-card-name">Freja Lindberg</p>
+      <p class="guide-card-role">Guide</p>
     </div>
   </div>
 </section>
@@ -859,37 +1165,35 @@
   <p class="section-label">From previous crawls</p>
   <h2 class="section-title">See what awaits</h2>
 
-  <div class="slideshow">
-    <img class="slideshow-img active" src="IMG_4239.jpeg" alt="Pubcrawl photo 1">
-    <img class="slideshow-img" src="IMG_4246.jpeg" alt="Pubcrawl photo 2">
-    <img class="slideshow-img" src="IMG_4231.jpeg" alt="Pubcrawl photo 3">
-    <img class="slideshow-img" src="IMG_4252.jpeg" alt="Pubcrawl photo 4">
-    <img class="slideshow-img" src="IMG_4255.jpeg" alt="Pubcrawl photo 5">
-    <img class="slideshow-img" src="IMG_4256.jpeg" alt="Pubcrawl photo 6">
-    <img class="slideshow-img" src="IMG_4257.jpeg" alt="Pubcrawl photo 7">
-    <img class="slideshow-img" src="IMG_4258.jpeg" alt="Pubcrawl photo 8">
-    <img class="slideshow-img" src="IMG_4260.jpeg" alt="Pubcrawl photo 9">
-    <img class="slideshow-img" src="IMG_4276.jpeg" alt="Pubcrawl photo 10">
-    <img class="slideshow-img" src="IMG_4281.jpeg" alt="Pubcrawl photo 11">
-    <img class="slideshow-img" src="IMG_4290.jpeg" alt="Pubcrawl photo 12">
-    <img class="slideshow-img" src="IMG_4291.jpeg" alt="Pubcrawl photo 13">
-    <img class="slideshow-img" src="IMG_4293.jpeg" alt="Pubcrawl photo 14">
-    <img class="slideshow-img" src="IMG_4302.jpeg" alt="Pubcrawl photo 15">
-    <img class="slideshow-img" src="IMG_4304.jpeg" alt="Pubcrawl photo 16">
-    <img class="slideshow-img" src="IMG_4308.jpeg" alt="Pubcrawl photo 17">
-    <img class="slideshow-img" src="IMG_4312.jpeg" alt="Pubcrawl photo 18">
-    <img class="slideshow-img" src="IMG_4322.jpeg" alt="Pubcrawl photo 19">
-    <img class="slideshow-img" src="IMG_4326.jpeg" alt="Pubcrawl photo 20">
-    <img class="slideshow-img" src="IMG_4330.jpeg" alt="Pubcrawl photo 21">
-    <img class="slideshow-img" src="IMG_4341.jpeg" alt="Pubcrawl photo 22">
-    <img class="slideshow-img" src="IMG_4347.jpeg" alt="Pubcrawl photo 23">
-    <img class="slideshow-img" src="IMG_4368.jpeg" alt="Pubcrawl photo 24">
-
-    <button class="slide-btn prev" aria-label="Previous">&#8592;</button>
-    <button class="slide-btn next" aria-label="Next">&#8594;</button>
+  <div class="gallery-grid">
+    <img loading="lazy" src="IMG_4239.jpeg" alt="Pubcrawl photo 1">
+    <img loading="lazy" src="IMG_4246.jpeg" alt="Pubcrawl photo 2">
+    <img loading="lazy" src="IMG_4290.jpeg" alt="Pubcrawl photo 12">
+    <img loading="lazy" src="IMG_4291.jpeg" alt="Pubcrawl photo 13">
+    <img loading="lazy" src="IMG_4341.jpeg" alt="Pubcrawl photo 22">
+    <img loading="lazy" src="IMG_4312.jpeg" alt="Pubcrawl photo 18">
+    <img loading="lazy" src="IMG_4231.jpeg" alt="Pubcrawl photo 3">
+    <img loading="lazy" src="IMG_4260.jpeg" alt="Pubcrawl photo 9">
+    <img loading="lazy" src="IMG_4252.jpeg" alt="Pubcrawl photo 4">
+    <img loading="lazy" src="IMG_4255.jpeg" alt="Pubcrawl photo 5">
+    <img loading="lazy" src="IMG_4256.jpeg" alt="Pubcrawl photo 6">
+    <img loading="lazy" src="IMG_4257.jpeg" alt="Pubcrawl photo 7">
+    
+    
+    
+    <img loading="lazy" src="IMG_4281.jpeg" alt="Pubcrawl photo 11">
+    <img loading="lazy" src="IMG_4293.jpeg" alt="Pubcrawl photo 14">
+    <img loading="lazy" src="IMG_4302.jpeg" alt="Pubcrawl photo 15">
+    <img loading="lazy" src="IMG_4304.jpeg" alt="Pubcrawl photo 16">
+    <img loading="lazy" src="IMG_4276.jpeg" alt="Pubcrawl photo 10">
+    <img loading="lazy" src="IMG_4308.jpeg" alt="Pubcrawl photo 17">
+    <img loading="lazy" src="IMG_4322.jpeg" alt="Pubcrawl photo 19">
+    <img loading="lazy" src="IMG_4258.jpeg" alt="Pubcrawl photo 8">
+    <img loading="lazy" src="IMG_4326.jpeg" alt="Pubcrawl photo 20">
+    <img loading="lazy" src="IMG_4330.jpeg" alt="Pubcrawl photo 21">
+    <img loading="lazy" src="IMG_4347.jpeg" alt="Pubcrawl photo 23">
+    <img loading="lazy" src="IMG_4368.jpeg" alt="Pubcrawl photo 24">
   </div>
-
-  <div class="slide-dots"></div>
 </section>
 
 <!-- TICKET -->
@@ -898,31 +1202,49 @@
   <p class="section-label">Pre-sale</p>
   <h2 class="section-title">Your ticket</h2>
 
-  <div class="ticket">
-    <div class="ticket-top">
-      <p class="ticket-event">Linköping Pubcrawl</p>
-      <p class="ticket-date-place">Every Friday &nbsp;·&nbsp; Linköping center</p>
-    </div>
-    <div class="ticket-bottom">
-      <div>
-        <div class="ticket-price">249<span style="font-size:1.5rem">kr</span></div>
-        <div class="ticket-price-label">Per person · pre-sale</div>
+  <div class="tickets">
+    <div class="ticket">
+      <div class="ticket-top">
+        <p class="ticket-event">Stångån</p>
+        <p class="ticket-date-place">Every Friday &nbsp;·&nbsp; Linköping center</p>
       </div>
-      <div class="ticket-includes">
-        <p>Each pub offers a welcome drink during the crawl</p>
-        <p>Entry to O'Learys (nightclub) — 50 kr at the door</p>
-        <p>Drinks at O'Learys are paid by each guest</p>
-        <p>Cloakroom included at O'Learys</p>
+      <div class="ticket-bottom">
+        <div>
+          <div class="ticket-price">249<span style="font-size:1.5rem">kr</span></div>
+          <div class="ticket-price-label">Per person · pre-sale</div>
+        </div>
+        <div class="ticket-includes">
+          <p>Each pub offers a welcome drink during the crawl</p>
+          <p>Entry to O'Learys (nightclub) — 50 kr at the door</p>
+          <p>Drinks at O'Learys are paid by each guest</p>
+          <p>Cloakroom included at O'Learys</p>
+        </div>
+        <a href="#book" class="btn-primary" onclick="selectRoute('stangan')">Book Stångån</a>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <p class="ticket-event">Gyllene</p>
+        <p class="ticket-date-place">Every Friday &nbsp;·&nbsp; Linköping center</p>
+        <span class="route-badge">Exclusive</span>
+      </div>
+      <div class="ticket-bottom">
+        <div>
+          <div class="ticket-price">449<span style="font-size:1.5rem">kr</span></div>
+          <div class="ticket-price-label">Per person · pre-sale</div>
+        </div>
+        <div class="ticket-includes">
+          <p>Each venue offers a welcome drink during the crawl</p>
+          <p>GRAND, Kusinen, Bon Bon &amp; Ölstugan Tullen</p>
+          <p>No entry fee at the door</p>
+        </div>
+        <a href="#book" class="btn-primary" onclick="selectRoute('gyllene')">Book Gyllene</a>
       </div>
     </div>
   </div>
 
-  <div class="ticket-cta">
-    <a href="#book" class="btn-primary">Book now</a>
-  </div>
-  <p style="margin-top:1.25rem; font-size:0.95rem; color:rgba(248,244,236,0.75); max-width:720px; margin-left:auto; margin-right:auto;">
-    The ticket price is 249 kr per person. Please bring 50 kr extra for O'Learys entry, since the venue ticket is tied to a personal QR code and cannot be prepaid by us.
-  </p>
+  
 </section>
 
 <!-- BOOKING -->
@@ -941,19 +1263,23 @@
 
     <!-- STEP 2 -->
     <div class="book-step" id="step2" style="display:none;">
-      <p class="book-step-label">Step 2 of 3 &nbsp;&#8212;&nbsp; How many people?</p>
-      <div style="margin-top:1.5rem; display:flex; align-items:center; justify-content:center; gap:2rem;">
+      <p class="book-step-label">Step 2 of 3 &nbsp;&#8212;&nbsp; Choose your route and how many people</p>
+      <div class="route-pick">
+        <button class="date-btn" data-route="stangan" onclick="selectRoute('stangan')"><span class="date-day">Stångån</span><span class="date-full">249 kr / person</span></button>
+        <button class="date-btn" data-route="gyllene" onclick="selectRoute('gyllene')"><span class="date-day">Gyllene</span><span class="date-full">449 kr / person</span></button>
+      </div>
+      <div style="margin-top:2rem; display:flex; align-items:center; justify-content:center; gap:2rem;">
         <button class="qty-btn" id="qty-minus">&#8722;</button>
-        <div style="text-align:center;">
+        <div style="text-align:center; width:9rem; flex-shrink:0;">
           <div id="qty-display" style="font-family:'Mellos'; font-size:5rem; color:var(--cream); line-height:1;">1</div>
-          <div style="font-size:0.75rem; letter-spacing:0.2em; color:rgba(248,244,236,0.4); text-transform:uppercase;">persons</div>
+          <div style="font-size:0.75rem; letter-spacing:0.2em; color:rgba(248,244,236,0.4); text-transform:uppercase;" id="qty-label">person</div>
         </div>
         <button class="qty-btn" id="qty-plus">+</button>
       </div>
       <div style="margin-top:2rem; border:1px solid rgba(248,244,236,0.2); padding:1.5rem; text-align:center; background:rgba(248,244,236,0.03);">
         <div style="font-size:0.7rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(248,244,236,0.4);">Total to pay</div>
         <div id="total-display" style="font-family:'Mellos'; font-size:3.5rem; color:var(--gold); line-height:1.2;">249 kr</div>
-        <div style="font-size:0.8rem; color:rgba(248,244,236,0.4); margin-top:0.3rem;">249 kr &#215; <span id="qty-text">1</span> person</div>
+        <div style="font-size:0.8rem; color:rgba(248,244,236,0.4); margin-top:0.3rem;"><span id="price-text">249</span> kr &#215; <span id="qty-text">1 person</span></div>
       </div>
       <div style="margin-top:2rem; display:flex; gap:1rem;">
         <button class="btn-ghost" onclick="goStep(1)" style="flex:1;">&#8592; Back</button>
@@ -968,11 +1294,16 @@
         <input id="input-name" type="text" placeholder="Your name" style="background:rgba(248,244,236,0.05); border:1px solid rgba(248,244,236,0.25); color:var(--cream); padding:1rem 1.2rem; font-family:'Mellos'; font-size:1rem; outline:none; width:100%;">
         <input id="input-phone" type="tel" placeholder="Your phone number (for confirmation)" style="background:rgba(248,244,236,0.05); border:1px solid rgba(248,244,236,0.25); color:var(--cream); padding:1rem 1.2rem; font-family:'Mellos'; font-size:1rem; outline:none; width:100%;">
       </div>
+      <p id="details-error" class="form-error" role="alert"></p>
       <div style="margin-top:1.5rem; border:1px solid rgba(248,244,236,0.3); padding:1.5rem; background:rgba(248,244,236,0.04);">
         <div style="font-size:0.7rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">Your booking summary</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
           <span style="color:rgba(248,244,236,0.5); font-size:0.9rem;">Date</span>
           <span id="summary-date" style="color:var(--cream); font-size:0.9rem;">&#8212;</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+          <span style="color:rgba(248,244,236,0.5); font-size:0.9rem;">Route</span>
+          <span id="summary-route" style="color:var(--cream); font-size:0.9rem;">&#8212;</span>
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
           <span style="color:rgba(248,244,236,0.5); font-size:0.9rem;">Persons</span>
@@ -1031,16 +1362,14 @@
       <h4 class="rule-title">Keep the pace</h4>
       <p class="rule-desc">About 45 min per stop. The group moves on together — no one is left behind.</p>
     </div>
+
     <div class="rule-card">
       <div class="rule-number">03</div>
-      <h4 class="rule-title">Pre-sale required</h4>
-      <p class="rule-desc">Tickets are sold in advance via Swish. No tickets are sold on site — so we know exactly how many we are.</p>
-    </div>
-    <div class="rule-card">
-      <div class="rule-number">04</div>
       <h4 class="rule-title">20 years & ID</h4>
       <p class="rule-desc">Age limit 20 years. Bring valid ID — required at all stops and entry to O'Learys.</p>
     </div>
+
+    
   </div>
 </section>
 
@@ -1050,7 +1379,6 @@
   <h2 class="section-title" style="text-align:center">Get in touch</h2>
   <a href="https://www.instagram.com/linkopingpubcrawl" class="contact-email" target="_blank" rel="noopener noreferrer">@linkopingpubcrawl</a>
   <div class="social-row">
-    <a href="https://www.instagram.com/linkopingpubcrawl" class="social-link" target="_blank" rel="noopener noreferrer">Instagram</a>
   </div>
 </section>
 
@@ -1062,7 +1390,17 @@
   // Booking form
   let selectedDate = null;
   let qty = 1;
-  const PRICE = 249;
+  const ROUTES = {
+    stangan: { name: 'Stångån', price: 249 },
+    gyllene: { name: 'Gyllene', price: 449 }
+  };
+  let route = 'stangan';
+
+  function selectRoute(key) {
+    route = key;
+    document.querySelectorAll('.route-pick .date-btn').forEach(b => b.classList.toggle('selected', b.dataset.route === key));
+    updateQty();
+  }
 
   // Generate upcoming Fridays from 1 May 2026 onwards
   function getUpcomingFridays(count) {
@@ -1093,7 +1431,7 @@
     btn.className = 'date-btn';
     btn.innerHTML = '<span class="date-day">Friday ' + fri.getDate() + ' ' + fri.toLocaleString('en-SE', {month:'short'}) + '</span><span class="date-full">' + fri.toLocaleString('en-SE', {year:'numeric'}) + '</span>';
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('#date-grid .date-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       selectedDate = fri;
       goStep(2);
@@ -1101,21 +1439,38 @@
     dateGrid.appendChild(btn);
   });
 
+  ['input-name', 'input-phone'].forEach(id => {
+    document.getElementById(id).addEventListener('input', e => {
+      e.target.classList.remove('input-invalid');
+      if (!document.querySelector('.input-invalid')) document.getElementById('details-error').classList.remove('show');
+    });
+  });
+
   function goStep(n) {
     if (n === 4) {
       const name = document.getElementById('input-name').value.trim();
       const phone = document.getElementById('input-phone').value.trim();
+      const nameEl = document.getElementById('input-name');
+      const phoneEl = document.getElementById('input-phone');
+      nameEl.classList.toggle('input-invalid', !name);
+      phoneEl.classList.toggle('input-invalid', !phone);
       if (!name || !phone) {
-        alert('Please fill in your name and phone number.');
+        const missing = !name && !phone ? 'your name and phone number' : !name ? 'your name' : 'your phone number';
+        const err = document.getElementById('details-error');
+        err.textContent = 'Please fill in ' + missing + ' to continue.';
+        err.classList.add('show');
+        (!name ? nameEl : phoneEl).focus();
         return;
       }
-      document.getElementById('swish-message').textContent = name + ' · ' + formatDateShort(selectedDate) + ' · ' + qty + ' person' + (qty > 1 ? 's' : '');
-      document.getElementById('swish-total').textContent = (qty * PRICE) + ' kr';
+      document.getElementById('details-error').classList.remove('show');
+      document.getElementById('swish-message').textContent = name + ' · ' + ROUTES[route].name + ' · ' + formatDateShort(selectedDate) + ' · ' + qty + ' person' + (qty > 1 ? 's' : '');
+      document.getElementById('swish-total').textContent = (qty * ROUTES[route].price) + ' kr';
     }
     if (n === 3) {
       document.getElementById('summary-date').textContent = formatDateShort(selectedDate);
+      document.getElementById('summary-route').textContent = ROUTES[route].name;
       document.getElementById('summary-qty').textContent = qty + ' person' + (qty > 1 ? 's' : '');
-      document.getElementById('summary-total').textContent = (qty * PRICE) + ' kr';
+      document.getElementById('summary-total').textContent = (qty * ROUTES[route].price) + ' kr';
     }
     document.querySelectorAll('.book-step').forEach(s => s.style.display = 'none');
     document.getElementById('step' + n).style.display = 'block';
@@ -1132,41 +1487,13 @@
 
   function updateQty() {
     document.getElementById('qty-display').textContent = qty;
-    document.getElementById('qty-text').textContent = qty;
-    document.getElementById('total-display').textContent = (qty * PRICE) + ' kr';
+    document.getElementById('qty-label').textContent = qty === 1 ? 'person' : 'persons';
+    document.getElementById('qty-text').textContent = qty + (qty === 1 ? ' person' : ' persons');
+    document.getElementById('price-text').textContent = ROUTES[route].price;
+    document.getElementById('total-display').textContent = (qty * ROUTES[route].price) + ' kr';
   }
 
-  // Slideshow
-  const slides = document.querySelectorAll('.slideshow-img');
-  const dotsContainer = document.querySelector('.slide-dots');
-  let current = 0;
-  let timer;
-
-  slides.forEach((_, i) => {
-    const d = document.createElement('span');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => goTo(i));
-    dotsContainer.appendChild(d);
-  });
-
-  function goTo(n) {
-    slides[current].classList.remove('active');
-    dotsContainer.children[current].classList.remove('active');
-    current = (n + slides.length) % slides.length;
-    slides[current].classList.add('active');
-    dotsContainer.children[current].classList.add('active');
-    resetTimer();
-  }
-
-  function resetTimer() {
-    clearInterval(timer);
-    timer = setInterval(() => goTo(current + 1), 4000);
-  }
-
-  document.querySelector('.slide-btn.next').addEventListener('click', () => goTo(current + 1));
-  document.querySelector('.slide-btn.prev').addEventListener('click', () => goTo(current - 1));
-
-  resetTimer();
+  selectRoute('stangan');
 
   // Stop animations
   const stops = document.querySelectorAll('.stop');
