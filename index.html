@@ -846,6 +846,19 @@
     display: block;
   }
 
+  .date-btn.sold-out,
+  .date-btn.sold-out:hover {
+    cursor: not-allowed;
+    opacity: 0.45;
+    background: rgba(248,244,236,0.04);
+    border-color: rgba(248,244,236,0.2);
+  }
+
+  .date-btn.sold-out .date-day {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+  }
+
   .qty-btn {
     width: 3rem;
     height: 3rem;
@@ -1188,33 +1201,33 @@
   <h2 class="section-title">See what awaits</h2>
 
   <div class="gallery-grid">
-    <img loading="lazy" src="IMG_4239.jpeg" alt="Pubcrawl photo 1">
-    <img loading="lazy" src="IMG_4246.jpeg" alt="Pubcrawl photo 2">
-    <img loading="lazy" src="IMG_4290.jpeg" alt="Pubcrawl photo 12">
-    <img loading="lazy" src="IMG_4291.jpeg" alt="Pubcrawl photo 13">
-    <img loading="lazy" src="IMG_4341.jpeg" alt="Pubcrawl photo 22">
-    <img loading="lazy" src="IMG_4312.jpeg" alt="Pubcrawl photo 18">
-    <img loading="lazy" src="IMG_4231.jpeg" alt="Pubcrawl photo 3">
-    <img loading="lazy" src="IMG_4260.jpeg" alt="Pubcrawl photo 9">
-    <img loading="lazy" src="IMG_4252.jpeg" alt="Pubcrawl photo 4">
-    <img loading="lazy" src="IMG_4255.jpeg" alt="Pubcrawl photo 5">
-    <img loading="lazy" src="IMG_4256.jpeg" alt="Pubcrawl photo 6">
-    <img loading="lazy" src="IMG_4257.jpeg" alt="Pubcrawl photo 7">
+    <img loading="lazy" src="gallery/IMG_4239.jpeg" alt="Pubcrawl photo 1">
+    <img loading="lazy" src="gallery/IMG_4246.jpeg" alt="Pubcrawl photo 2">
+    <img loading="lazy" src="gallery/IMG_4290.jpeg" alt="Pubcrawl photo 12">
+    <img loading="lazy" src="gallery/IMG_4291.jpeg" alt="Pubcrawl photo 13">
+    <img loading="lazy" src="gallery/IMG_4341.jpeg" alt="Pubcrawl photo 22">
+    <img loading="lazy" src="gallery/IMG_4312.jpeg" alt="Pubcrawl photo 18">
+    <img loading="lazy" src="gallery/IMG_4231.jpeg" alt="Pubcrawl photo 3">
+    <img loading="lazy" src="gallery/IMG_4260.jpeg" alt="Pubcrawl photo 9">
+    <img loading="lazy" src="gallery/IMG_4252.jpeg" alt="Pubcrawl photo 4">
+    <img loading="lazy" src="gallery/IMG_4255.jpeg" alt="Pubcrawl photo 5">
+    <img loading="lazy" src="gallery/IMG_4256.jpeg" alt="Pubcrawl photo 6">
+    <img loading="lazy" src="gallery/IMG_4257.jpeg" alt="Pubcrawl photo 7">
     
     
     
-    <img loading="lazy" src="IMG_4281.jpeg" alt="Pubcrawl photo 11">
-    <img loading="lazy" src="IMG_4293.jpeg" alt="Pubcrawl photo 14">
-    <img loading="lazy" src="IMG_4302.jpeg" alt="Pubcrawl photo 15">
-    <img loading="lazy" src="IMG_4304.jpeg" alt="Pubcrawl photo 16">
-    <img loading="lazy" src="IMG_4276.jpeg" alt="Pubcrawl photo 10">
-    <img loading="lazy" src="IMG_4308.jpeg" alt="Pubcrawl photo 17">
-    <img loading="lazy" src="IMG_4322.jpeg" alt="Pubcrawl photo 19">
-    <img loading="lazy" src="IMG_4258.jpeg" alt="Pubcrawl photo 8">
-    <img loading="lazy" src="IMG_4326.jpeg" alt="Pubcrawl photo 20">
-    <img loading="lazy" src="IMG_4330.jpeg" alt="Pubcrawl photo 21">
-    <img loading="lazy" src="IMG_4347.jpeg" alt="Pubcrawl photo 23">
-    <img loading="lazy" src="IMG_4368.jpeg" alt="Pubcrawl photo 24">
+    <img loading="lazy" src="gallery/IMG_4281.jpeg" alt="Pubcrawl photo 11">
+    <img loading="lazy" src="gallery/IMG_4293.jpeg" alt="Pubcrawl photo 14">
+    <img loading="lazy" src="gallery/IMG_4302.jpeg" alt="Pubcrawl photo 15">
+    <img loading="lazy" src="gallery/IMG_4304.jpeg" alt="Pubcrawl photo 16">
+    <img loading="lazy" src="gallery/IMG_4276.jpeg" alt="Pubcrawl photo 10">
+    <img loading="lazy" src="gallery/IMG_4308.jpeg" alt="Pubcrawl photo 17">
+    <img loading="lazy" src="gallery/IMG_4322.jpeg" alt="Pubcrawl photo 19">
+    <img loading="lazy" src="gallery/IMG_4258.jpeg" alt="Pubcrawl photo 8">
+    <img loading="lazy" src="gallery/IMG_4326.jpeg" alt="Pubcrawl photo 20">
+    <img loading="lazy" src="gallery/IMG_4330.jpeg" alt="Pubcrawl photo 21">
+    <img loading="lazy" src="gallery/IMG_4347.jpeg" alt="Pubcrawl photo 23">
+    <img loading="lazy" src="gallery/IMG_4368.jpeg" alt="Pubcrawl photo 24">
   </div>
 </section>
 
@@ -1448,10 +1461,21 @@
   // Build date grid
   const dateGrid = document.getElementById('date-grid');
   const fridays = getUpcomingFridays(8);
+  // Dates that can't be booked — shown crossed out as fully booked (YYYY-MM-DD)
+  const FULL_DATES = ['2026-11-20'];
+  const dateKey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   fridays.forEach(fri => {
     const btn = document.createElement('button');
     btn.className = 'date-btn';
-    btn.innerHTML = '<span class="date-day">Friday ' + fri.getDate() + ' ' + fri.toLocaleString('en-SE', {month:'short'}) + '</span><span class="date-full">' + fri.toLocaleString('en-SE', {year:'numeric'}) + '</span>';
+    const isFull = FULL_DATES.includes(dateKey(fri));
+    btn.innerHTML = '<span class="date-day">Friday ' + fri.getDate() + ' ' + fri.toLocaleString('en-SE', {month:'short'}) + '</span><span class="date-full">' + (isFull ? 'Fully booked' : fri.toLocaleString('en-SE', {year:'numeric'})) + '</span>';
+    if (isFull) {
+      btn.classList.add('sold-out');
+      btn.disabled = true;
+      btn.setAttribute('aria-label', 'Friday ' + fri.getDate() + ' ' + fri.toLocaleString('en-SE', {month:'long'}) + ' — fully booked');
+      dateGrid.appendChild(btn);
+      return;
+    }
     btn.addEventListener('click', () => {
       document.querySelectorAll('#date-grid .date-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
